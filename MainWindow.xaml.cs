@@ -19,6 +19,21 @@ namespace Network_PC_Sentinel
         public MainWindow()
         {
             InitializeComponent();
+            updateComboBoxRechner();
         }
+
+        private void updateComboBoxRechner()
+        {
+            Data data;
+            data = Data.Instance;
+            List<Computer> computers = data.getComputers();
+            foreach (Computer computer in computers)
+            {
+                cbRechner.Items.Add(computer.getName());
+            }
+
+
+        }
+
     }
 }

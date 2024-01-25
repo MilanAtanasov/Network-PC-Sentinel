@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,6 +31,8 @@ namespace Network_PC_Sentinel
                 {
                     instance = new Data();
                 }
+
+                instance.updateComputers();
                 return instance;
             }
         }
@@ -64,6 +67,61 @@ namespace Network_PC_Sentinel
         public void setPath(String path)
         {
             this.path = path;
+        }
+
+        private void updateComputers()
+        {
+            List<String> computerNames = readFiles();
+            for (int i = 0; i < computerNames.Count; i++)
+            {
+                String computerName = computerNames[i];
+                ArrayList IPs = new ArrayList();
+                String lastTurnedOnOff = "0";
+                Computer computer = new Computer(computerName, IPs, lastTurnedOnOff);
+                computers.Add(computer);
+            }
+        }
+
+        private List<String> readFiles()
+        {
+            List<String> files = new List<String>();
+
+            // read the file names from path
+            // add them to the list
+
+            String[] fileEntries = System.IO.Directory.GetFiles(path);
+            foreach (String fileName in fileEntries)
+            {
+                String onlyFileName = fileName.Substring(path.Length);
+                onlyFileName = onlyFileName.Substring(0, onlyFileName.Length - 4);
+                onlyFileName = onlyFileName.ToUpper();
+                files.Add(onlyFileName);
+            }            
+
+            return files;
+        }
+
+        private List<List<String>> readData()
+        {
+            List<List<String>> data = new List<List<String>>();
+
+            // read the data from files
+            // add them to the list
+
+            String[] fileEntries = System.IO.Directory.GetFiles(path);
+            foreach (String fileName in fileEntries)
+            {
+                List<String> fileData = new List<String>();
+                String[] lines = System.IO.File.ReadAllLines(fileName);
+                foreach (String line in lines)
+                {
+                    fileData.Add(line);
+                }
+                data.Add(fileData);
+            }
+
+            return data;
+
         }
 
     }
