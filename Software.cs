@@ -11,16 +11,13 @@ namespace Network_PC_Sentinel
     {
 
         String name;
-        String description;
         String version;
+        String publisher;
+        String installDate;
+        String description;
         ArrayList simmularSoftware = new ArrayList();
 
-        public Software(String name, String description, String version)
-        {
-            this.name = name;
-            this.description = description;
-            this.version = version;
-        }   
+        public Software(String name) { this.name = name; }
 
         public String getName()
         {

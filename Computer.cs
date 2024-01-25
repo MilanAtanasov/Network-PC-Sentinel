@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace Network_PC_Sentinel
 {
@@ -12,12 +13,18 @@ namespace Network_PC_Sentinel
         String name;
         ArrayList IPs;
         String lastTurnedOnOff;
-        ArrayList software = new ArrayList();
+        List<Software> software = new List<Software>();
 
-        public Computer(String name, ArrayList IPs, String lastTurnedOnOff)
+        public Computer()
+        {
+
+        }
+
+        public Computer(String name, ArrayList IPs, List<Software> software, String lastTurnedOnOff)
         {
             this.name = name;
             this.IPs = IPs;
+            this.software = software;
             this.lastTurnedOnOff = lastTurnedOnOff;
         }
 
@@ -30,6 +37,12 @@ namespace Network_PC_Sentinel
         {
             return IPs;
         }
+
+        public List<Software> getSoftware()
+        {
+            return software;
+        }
+
 
         public String getLastTurnedOnOff()
         {
@@ -53,15 +66,18 @@ namespace Network_PC_Sentinel
             this.lastTurnedOnOff = lastTurnedOnOff;
         }
 
+        public void setSoftware(List<Software> software)
+        {
+            this.software = software;
+        }
+
+
+
         public override String ToString()
         {
             return "Computer{" + "name=" + name + ", IPs=" + IPs + ", lastTurnedOnOff=" + lastTurnedOnOff + '}';
         }
 
-        public void addSoftware(Software software)
-        {
-            this.software.Add(software);
-        }
 
     }
 }

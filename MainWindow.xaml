@@ -5,9 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Network_PC_Sentinel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"Width="575">
+        Title="MainWindow" Height="450" Width="500">
     <Grid>
-        <ComboBox x:Name="cbRechner" HorizontalAlignment="Left" Margin="111,27,0,0" VerticalAlignment="Top" Width="232"/>
+        <ComboBox 
+            x:Name="cbRechner" 
+            HorizontalAlignment="Left" 
+            Margin="111,27,0,0" 
+            VerticalAlignment="Top" 
+            Width="232"
+            SelectionChanged="cbRechner_SelectionChanged"
+            />
         <Label x:Name="lRechner" Content="Rechner" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top" Width="91"/>
         <TabControl x:Name="tabControl" Margin="10,73,10,10">
             <TabItem Header="Software">
