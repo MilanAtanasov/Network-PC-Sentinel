@@ -19,7 +19,7 @@ namespace Network_PC_Sentinel
         private static Data instance = null;
         private List<Computer> computers = new List<Computer>();
         private List<Software> software = new List<Software>();
-        private String path = "C:\\Users\\Public\\Documents\\Network PC Sentinel\\";
+        private String path = " ";
 
         // 2. Private constructor so that no instance can be created from outside
         private Data()
@@ -34,7 +34,8 @@ namespace Network_PC_Sentinel
                 // If the instance is null then create one and return, otherwise return the existing instance
                 if (instance == null)
                 {
-                    instance = new Data();
+                    instance = new Data();        
+                    instance.initialPathSetup();
                     instance.updateData();
                 }
                 return instance;
@@ -247,6 +248,19 @@ namespace Network_PC_Sentinel
 
             }
             return softwareDataList;
+        
+        }
+
+        public void initialPathSetup()
+        {
+            // get path to executable, and go one folder up. set this as the path
+            String path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            // remove the last folder
+            path = path.Substring(0, path.LastIndexOf("\\"));
+            path = path.Substring(0, path.LastIndexOf("\\"));
+            Debug.WriteLine("Path:" + path);    
+
+            setPath(path);
         }
 
     }

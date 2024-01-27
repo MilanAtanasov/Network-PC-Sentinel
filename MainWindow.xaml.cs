@@ -22,6 +22,9 @@ namespace Network_PC_Sentinel
         {
             InitializeComponent();
             updateComboBoxRechner();
+            Data data = Data.Instance;
+            data.initialPathSetup();
+            Debug.WriteLine("Path:" + Data.Instance.getPath());
         }
 
         private void updateComboBoxRechner()
@@ -31,9 +34,9 @@ namespace Network_PC_Sentinel
             List<Computer> computers = data.getComputers();
             foreach (Computer computer in computers)
             {
-                Debug.WriteLine(computer.getName());
                 cbRechner.Items.Add(computer.getName());
             }
+            labelCurrentPath.Content = Data.Instance.getPath();
 
 
         }
@@ -134,8 +137,6 @@ namespace Network_PC_Sentinel
             // Update the ComboBox
             cbRechner.Items.Clear();
             updateComboBoxRechner();
-
-
 
         }
 
