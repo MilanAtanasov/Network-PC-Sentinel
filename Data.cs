@@ -257,7 +257,6 @@ namespace Network_PC_Sentinel
             String path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             // remove the last folder
             path = path.Substring(0, path.LastIndexOf("\\"));
-            path = path.Substring(0, path.LastIndexOf("\\"));
             Debug.WriteLine("Path:" + path);    
 
             setPath(path);
