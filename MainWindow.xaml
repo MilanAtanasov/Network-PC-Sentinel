@@ -5,21 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Network_PC_Sentinel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="500">
+        Title="MainWindow" Height="450" Width="901">
     <Grid>
         <ComboBox 
             x:Name="cbRechner" 
             HorizontalAlignment="Left" 
-            Margin="111,27,0,0" 
+            Margin="67,44,0,0" 
             VerticalAlignment="Top" 
             Width="232"
             SelectionChanged="cbRechner_SelectionChanged"
             />
-        <Label x:Name="lRechner" Content="Rechner" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top" Width="91"/>
+        <Label x:Name="lRechner" Content="Rechner" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top" Width="57"/>
         <TabControl x:Name="tabControl" Margin="10,73,10,10">
             <TabItem Header="Software">
                 <Grid Background="#FFE5E5E5">
-                    <ListBox x:Name="listBoxSoftware" Margin="10,10,10,10"/>
+                    <DataGrid x:Name="dataGridSoftware" d:ItemsSource="{d:SampleData ItemCount=1}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="IPs    ">
@@ -28,6 +28,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
+        <Button x:Name="buttonPathChange" Content="Pfad ändern" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="114" Click="clickButtonPathChange" />  
 
     </Grid>
 </Window>

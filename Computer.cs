@@ -11,7 +11,7 @@ namespace Network_PC_Sentinel
     internal class Computer
     {
         String name;
-        ArrayList IPs;
+        List<String> IPs;
         String lastTurnedOnOff;
         List<Software> software = new List<Software>();
 
@@ -20,7 +20,7 @@ namespace Network_PC_Sentinel
 
         }
 
-        public Computer(String name, ArrayList IPs, List<Software> software, String lastTurnedOnOff)
+        public Computer(String name, List<String> IPs, List<Software> software, String lastTurnedOnOff)
         {
             this.name = name;
             this.IPs = IPs;
@@ -33,7 +33,7 @@ namespace Network_PC_Sentinel
             return name;
         }
 
-        public ArrayList getIPs()
+        public List<String> getIPs()
         {
             return IPs;
         }
@@ -56,7 +56,7 @@ namespace Network_PC_Sentinel
         }
 
 
-        public void setIPs(ArrayList IPs)
+        public void setIPs(List<String> IPs)
         {
             this.IPs = IPs;
         }

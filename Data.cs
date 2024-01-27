@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
@@ -34,13 +35,12 @@ namespace Network_PC_Sentinel
                 if (instance == null)
                 {
                     instance = new Data();
+                    instance.updateData();
                 }
-                instance.updateData();
                 return instance;
             }
         }
 
-        // Rest of the class members go here
 
         public List<Computer> getComputers()
         {
@@ -84,7 +84,7 @@ namespace Network_PC_Sentinel
             foreach (ArrayList computerData in computers)
             {
                 String name = (String)computerData[0];
-                ArrayList ips = (ArrayList)computerData[1];
+                List<String> ips = (List<String>)computerData[1];
                 List<Software> software = (List<Software>)computerData[2];
                 String lastTurnedOnOff = (String)computerData[3];
                 Computer computer = new Computer(name, ips, software, lastTurnedOnOff);
@@ -102,7 +102,7 @@ namespace Network_PC_Sentinel
             foreach (List<String> computerData in data)
             {
                 ArrayList computer = new ArrayList();
-                ArrayList ips = new ArrayList();
+                List<String> ips = new List<String>();
                 List<Software> software = new List<Software>();
                 String lastTurnedOnOff = computerData[computerData.Count - 1];
 
@@ -140,7 +140,19 @@ namespace Network_PC_Sentinel
                     {
                         if (!line.StartsWith(" "))
                         {
-                            software.Add(new Software(line));
+                            List<string> parsedSoftwareData = SoftwareDataParser(line);
+                            if (parsedSoftwareData.Count == 1)
+                            {
+                                software.Add(new Software(parsedSoftwareData[0]));
+                            }
+                            else if (parsedSoftwareData.Count == 2)
+                            {
+                                software.Add(new Software(parsedSoftwareData[0], parsedSoftwareData[1], ""));
+                            }
+                            else if (parsedSoftwareData.Count <= 3)
+                            {
+                                software.Add(new Software(parsedSoftwareData[0], parsedSoftwareData[1], parsedSoftwareData[2]));
+                            }
                         }
                     }
                 }
@@ -162,11 +174,27 @@ namespace Network_PC_Sentinel
         {
             List<List<String>> data = new List<List<String>>();
 
-            List<String> files = System.IO.Directory.GetFiles(path).ToList();
+            List<String> files = new List<String>();
+
+            // first try to see if the path exists
+            if (Directory.Exists(path))
+            {
+                // get all the files in the path
+                files.AddRange(Directory.GetFiles(path, "*.txt", SearchOption.AllDirectories));
+            }
+            else
+            {
+                // if the path does not exist, then open a dialog to select a path
+                PathSelectionWindow pathSelectionWindow = new PathSelectionWindow();
+                pathSelectionWindow.ShowDialog();
+            }
+
+            
+            
             foreach (String fileName in files)
             {
                 List<String> fileData = new List<String>();
-                fileData.Add(fileName.Replace(path, "").ToUpper().Replace(".TXT", ""));
+                fileData.Add(fileName.Replace(path, "").ToUpper().Replace(".TXT", "").Replace("\\", ""));
                 String[] lines = System.IO.File.ReadAllLines(fileName);
                 foreach (String line in lines)
                 {
@@ -181,58 +209,46 @@ namespace Network_PC_Sentinel
 
         }
 
+        public static List<string> SoftwareDataParser(string softwareData)
+        {
+            List<string> softwareDataList = new List<string>();
+            // Split the input string into lines
+            string[] splitData = softwareData.Split("  ");
+
+            // Add the first line to the list, and remove it from the array
+            softwareDataList.Add(splitData[0]);
+            splitData = splitData.Skip(1).ToArray();
+
+            // Clean up  the array, of empty lines
+            splitData = splitData.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
+            // Clean up the array, of lines that are only spaces
+            splitData = splitData.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+
+            // Check if there is a version number (numbers and dots) in a string together with a publisher
+            foreach (string line in splitData)
+            {
+                if (line.Contains(".") && line.Any(char.IsDigit))
+                {
+                    softwareDataList.Add(line);
+                    splitData = splitData.Where(x => x != line).ToArray();
+                    break;
+                }
+                
+            }
+
+            // Check if there is a publisher, it is the last sentence in the array
+            foreach (string line in splitData)
+            {
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    softwareDataList.Add(line);
+                }
+
+            }
+            return softwareDataList;
+        }
+
     }
 }
 
-
-// Example File:
-/*/169.254.201.26
-134.147.190.188
-127.0.0.1
-
-DisplayName                                                     DisplayVersion   Publisher             InstallDate
------------                                                     --------------   ---------             -----------
-                                                                                                                  
-Mozilla Firefox (x64 de)                                        121.0.1          Mozilla                          
-Mozilla Maintenance Service                                     101.0.1          Mozilla                          
-                                                                                 Microsoft Corporation            
-                                                                                 Microsoft Corporation            
-Microsoft 365 Apps for Enterprise - de-de                       16.0.16924.20180 Microsoft Corporation            
-Microsoft OneDrive                                              23.246.1127.0002 Microsoft Corporation            
-                                                                                 Microsoft Corporation            
-Sophos Endpoint Agent                                           2023.1.3.6       Sophos Limited        20240116   
-Sophos Endpoint Defense                                         3.1.3.2282       Sophos Limited        20240123   
-Sophos ML Engine                                                1.8.25.1         Sophos Limited                   
-Sophos Standalone Engine                                        3.88.0.81        Sophos Limited                   
-                                                                                                                  
-Sophos AutoUpdate                                               6.15.1417        Sophos Limited        20240116   
-Dynamic Application Loader Host Interface Service               1.0.0.0          Intel Corporation     20220317   
-Sophos AMSI Protection                                          1.9.2098         Sophos Limited        20240116   
-Intel(R) Management Engine Components                           1.0.0.0          Intel Corporation     20220622   
-Intel(R) Management Engine Components                           2205.15.0.2623   Intel Corporation                
-Microsoft Update Health Tools                                   3.74.0.0         Microsoft Corporation 20231110   
-Sophos Endpoint Agent                                           2.9.564          Sophos Limited        20240116   
-Sophos Endpoint Firewall                                        2.3.93           Sophos Limited        20240116   
-Sophos Network Threat Protection                                1.17.3508        Sophos Limited        20240123   
-Zoom (64-bit)                                                   5.16.26186       Zoom                  20231215   
-Intel(R) Serial IO                                              30.100.1943.2    Intel Corporation     20220622   
-Sophos Endpoint Self Help                                       3.4.530.0        Sophos Limited        20240116   
-Dell SupportAssist OS Recovery Plugin for Dell Update           5.5.4.16189      Dell Inc.             20221111   
-Microsoft VC++ redistributables repacked.                       12.0.0.0         Intel Corporation     20220622   
-Sophos Diagnostic Utility                                       6.15.1417        Sophos Limited        20240116   
-Intel(R) LMS                                                    1.0.0.0          Intel Corporation     20220317   
-Sophos Exploit Prevention                                       3.9.1.2325       Sophos Limited        20240116   
-Office 16 Click-to-Run Licensing Component                      16.0.16924.20180 Microsoft Corporation 20231213   
-Office 16 Click-to-Run Extensibility Component                  16.0.16924.20124 Microsoft Corporation 20231213   
-Office 16 Click-to-Run Localization Component                   16.0.16924.20088 Microsoft Corporation 20231213   
-Intel(R) Icls                                                   1.0.0.0          Intel Corporation     20220317   
-Intel(R) Management Engine Driver                               1.0.0.0          Intel Corporation     20220622   
-Intel(R) Serial IO                                              30.100.1943.2    Intel Corporation                
-Intel(R) LMS                                                    1.0.0.0          Intel Corporation     20220317   
-Windows-PC-Integritätsprüfung                                   3.6.2204.08001   Microsoft Corporation 20220608   
-Intel(R) Management Engine Components                           1.0.0.0          Intel Corporation     20220622   
-Intel(R) Trusted Connect Service Client x64                     1.63.1155.2      Intel Corporation     20220622   
-Sophos File Scanner                                             1.11.3.530       Sophos Limited        20240116   
-Local Administrator Password Solution                           6.2.0.0          Microsoft Corporation 20221012   
-HP PageWide Pro 477dw MFP - Grundlegende Software für das Gerät 38.9.2003.21350  HP Inc.               20231009   
-*/

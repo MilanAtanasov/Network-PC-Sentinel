@@ -14,10 +14,21 @@ namespace Network_PC_Sentinel
         String version;
         String publisher;
         String installDate;
-        String description;
+        private String description;
         ArrayList simmularSoftware = new ArrayList();
 
-        public Software(String name) { this.name = name; }
+        public Software(String name) { 
+            this.name = name; 
+            this.version = "";
+            this.publisher = "";
+        }
+
+        public Software(String name, String version, String publisher)
+        {
+            this.name = name;
+            this.version = version;
+            this.publisher = publisher;
+        }
 
         public String getName()
         {
@@ -33,6 +44,10 @@ namespace Network_PC_Sentinel
         {
             return version;
         }
+        public String getPublisher()
+        {
+               return publisher;
+        }
 
         public void setName(String name)
         {
@@ -47,6 +62,11 @@ namespace Network_PC_Sentinel
         public void setVersion(String version)
         {
             this.version = version;
+        }
+
+        public void setPublisher(String publisher)
+        {
+            this.publisher = publisher;
         }
 
         public override String ToString()
