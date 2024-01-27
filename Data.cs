@@ -182,12 +182,12 @@ namespace Network_PC_Sentinel
                 // get all the files in the path
                 files.AddRange(Directory.GetFiles(path, "*.txt", SearchOption.AllDirectories));
             }
+            /*
             else
             {
-                // if the path does not exist, then open a dialog to select a path
-                PathSelectionWindow pathSelectionWindow = new PathSelectionWindow();
-                pathSelectionWindow.ShowDialog();
-            }
+                // if the path does not exist, create it
+                Directory.CreateDirectory(path);
+            }*/
 
             
             

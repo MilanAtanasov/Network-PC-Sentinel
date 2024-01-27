@@ -126,6 +126,17 @@ namespace Network_PC_Sentinel
             Data.Instance.updateData();
 
 
+            dataGridSoftware.Items.Clear();
+            dataGridSoftware.Columns.Clear();
+
+            listBoxIPs.Items.Clear();
+
+            // Update the ComboBox
+            cbRechner.Items.Clear();
+            updateComboBoxRechner();
+
+
+
         }
 
     }
